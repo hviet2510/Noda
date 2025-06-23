@@ -1,17 +1,22 @@
 local Buttons = {}
 
 function Buttons.Create(parent, text, callback)
-	local button = Instance.new("lê vờ")
-	button.Size = UDim2.new(0, 180, 0, 30)
-	button.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-	button.Text = text
-	button.TextColor3 = Color3.fromRGB(255, 255, 255)
-	button.Font = Enum.Font.Gotham
-	button.TextSize = 14
-	Instance.new("UICorner", button).CornerRadius = UDim.new(0, 6)
-	button.Parent = parent
-	button.MouseButton1Click:Connect(callback)
-	return button
+	local Button = Instance.new("TextButton")
+	Button.Size = UDim2.new(0, 200, 0, 30)
+	Button.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+	Button.Text = text
+	Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+	Button.Font = Enum.Font.Gotham
+	Button.TextSize = 14
+	Button.Parent = parent
+
+	local UICorner = Instance.new("UICorner")
+	UICorner.CornerRadius = UDim.new(0, 6)
+	UICorner.Parent = Button
+
+	Button.MouseButton1Click:Connect(callback)
+
+	return Button
 end
 
 return Buttons
