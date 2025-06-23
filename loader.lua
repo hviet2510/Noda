@@ -1,21 +1,34 @@
-local function loadModule(url)
-	local success, result = pcall(function()
-		return loadstring(game:HttpGet(url))()
-	end)
-	if not success then
-		warn("❗ Lỗi tải module:", url, "\n", result)
-	end
-	return result
+local function Notify(text)
+	print("[Loader] " .. text)
 end
 
-local baseURL = "https://raw.githubusercontent.com/hviet2510/Noda/main/modules/"
+local function ImportModule(name)
+	Notify("Đang tải module: " .. name)
+	local success, result = pcall(function()
+		return loadstring(game:HttpGet("https://raw.githubusercontent.com/hviet2510/Noda/main/modules/" .. name .. ".lua"))()
+	end)
+	if success then
+		Notify("Đã tải xong module: " .. name)
+		return result
+	else
+		warn("[Loader ERROR] Module lỗi: " .. name .. "\n" .. tostring(result))
+	end
+end
 
-local EnemyList = loadModule(baseURL.."enemylist.lua")
-local Config = loadModule(baseURL.."config.lua")
-local Tabs = loadModule(baseURL.."tabs.lua")
-local Buttons = loadModule(baseURL.."buttons.lua")
-local UI = loadModule(baseURL.."ui.lua")
-local AutoStats = loadModule(baseURL.."autostats.lua")
-local AutoFarm = loadModule(baseURL.."autofarm.lua")
+Notify("Bắt đầu tải các module...")
 
-if UI then UI(Tabs, Buttons, Config, AutoFarm, EnemyList, AutoStats) end
+local Tabs = ImportModule("tabs")
+local Buttons = ImportModule("buttons")
+local Config = ImportModule("config")
+local EnemyList = ImportModule("enemylist")
+local AutoFarm = ImportModule("autofarm")
+local AutoStats = ImportModule("autostats")
+local UI = ImportModule("ui")
+
+if UI then
+	Notify("Khởi tạo UI...")
+	UI(Tabs, Buttons, Config, AutoFarm, EnemyList, AutoStats)
+	Notify("Hoàn tất.")
+else
+	warn("[Loader ERROR] Không thể khởi tạo UI!")
+end
