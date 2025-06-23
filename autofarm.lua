@@ -1,13 +1,45 @@
--- Module Theme.lua: Chứa các thông số về màu sắc, font, giao diện
-local Theme = {}
+return function(EnemyList)
+	local Players, ReplicatedStorage = game:GetService("Players"), game:GetService("ReplicatedStorage")
+	local player, character = Players.LocalPlayer, Players.LocalPlayer.Character or Players.LocalPlayer.CharacterAdded:Wait()
 
-Theme.PrimaryColor = Color3.fromRGB(20, 20, 20)      -- Nền chính
-Theme.SecondaryColor = Color3.fromRGB(25, 25, 25)    -- Sidebar
-Theme.AccentColor = Color3.fromRGB(40, 40, 40)       -- Button, Toggle, Dropdown
-Theme.TextColor = Color3.fromRGB(255, 255, 255)      -- Màu chữ
-Theme.HighlightColor = Color3.fromRGB(60, 60, 60)    -- Hover, chọn
+	local function BringMob()
+		for _, mob in pairs(workspace.Enemies:GetChildren()) do
+			if mob:FindFirstChild("HumanoidRootPart") and mob.Humanoid.Health > 0 then
+				mob.HumanoidRootPart.CFrame = character.HumanoidRootPart.CFrame * CFrame.new(0, -3, -5)
+				mob.HumanoidRootPart.Anchored = true
+			end
+		end
+	end
 
-Theme.Font = Enum.Font.Gotham
-Theme.CornerRadius = UDim.new(0, 6)
+	local function AttackMob()
+		for _, mob in pairs(workspace.Enemies:GetChildren()) do
+			if mob:FindFirstChild("Humanoid") and mob.Humanoid.Health > 0 then
+				pcall(function()
+					ReplicatedStorage.Remotes.Combat:FireServer(mob)
+				end)
+			end
+		end
+	end
 
-return Theme
+	local function GetQuestData()
+		for i = #EnemyList, 1, -1 do
+			local d = EnemyList[i]
+			if player.Data.Level.Value >= d.Level then return d end
+		end
+	end
+
+	while task.wait(0.1) do
+		local data = GetQuestData()
+		if data then
+			pcall(function()
+				ReplicatedStorage.Remotes.CommF_:InvokeServer("StartQuest", data.Quest, 1)
+				character.HumanoidRootPart.CFrame = CFrame.new(data.Pos + Vector3.new(0, 30, 0))
+			end)
+			BringMob()
+			for _ = 1, 5 do
+				AttackMob()
+				task.wait(0.05)
+			end
+		end
+	end
+end
