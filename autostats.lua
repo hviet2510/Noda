@@ -1,6 +1,8 @@
 return function()
 	local ReplicatedStorage = game:GetService("ReplicatedStorage")
-	while task.wait(1) do
+	local player = game:GetService("Players").LocalPlayer
+
+	while task.wait(5) do
 		pcall(function()
 			ReplicatedStorage.Remotes.CommF_:InvokeServer("AddPoint", "Melee", 1)
 		end)
