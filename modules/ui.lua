@@ -1,77 +1,58 @@
 return function(Tabs, Buttons, Config, AutoFarm, EnemyList, AutoStats)
-	local Players = game:GetService("Players")
-	local PlayerGui = Players.LocalPlayer:WaitForChild("PlayerGui")
-
-	-- ScreenGui chính
-	local ScreenGui = Instance.new("ScreenGui", PlayerGui)
+	local Player = game:GetService("Players").LocalPlayer
+	local ScreenGui = Instance.new("ScreenGui", game:GetService("CoreGui"))
 	ScreenGui.Name = "StackFlowUI"
 
-	-- Main Frame
 	local MainFrame = Instance.new("Frame", ScreenGui)
-	MainFrame.Size = UDim2.new(0, 500, 0, 350)
-	MainFrame.Position = UDim2.new(0.5, -250, 0.5, -175)
-	MainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-	MainFrame.BorderSizePixel = 0
+	MainFrame.Size = UDim2.new(0, 400, 0, 300)
+	MainFrame.Position = UDim2.new(0.5, -200, 0.5, -150)
+	MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+	MainFrame.Active = true
+	MainFrame.Draggable = true
 	Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0, 8)
 
-	-- Tabs Holder
-	local TabsHolder = Instance.new("Frame", MainFrame)
-	TabsHolder.Size = UDim2.new(0, 120, 1, 0)
-	TabsHolder.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-	TabsHolder.Position = UDim2.new(0, 0, 0, 0)
-	Instance.new("UICorner", TabsHolder).CornerRadius = UDim.new(0, 8)
+	local TabContainer = Instance.new("Frame", MainFrame)
+	TabContainer.Size = UDim2.new(1, 0, 0, 30)
+	TabContainer.BackgroundTransparency = 1
+	Instance.new("UIListLayout", TabContainer).FillDirection = Enum.FillDirection.Horizontal
 
-	local TabsLayout = Instance.new("UIListLayout", TabsHolder)
-	TabsLayout.Padding = UDim.new(0, 5)
-	TabsLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-
-	-- Nút bật/tắt UI
+	-- Toggle Bật/Tắt UI
 	local ToggleButton = Instance.new("TextButton", ScreenGui)
-	ToggleButton.Size = UDim2.new(0, 40, 0, 40)
-	ToggleButton.Position = UDim2.new(1, -50, 0, 20)
-	ToggleButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-	ToggleButton.Text = "🌚"
+	ToggleButton.Size = UDim2.new(0, 120, 0, 30)
+	ToggleButton.Position = UDim2.new(0, 10, 0, 10)
+	ToggleButton.Text = "Hiện UI"
+	ToggleButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
 	ToggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-	ToggleButton.Font = Enum.Font.GothamBold
-	ToggleButton.TextSize = 16
-	Instance.new("UICorner", ToggleButton).CornerRadius = UDim.new(0, 8)
+	ToggleButton.Font = Enum.Font.Gotham
+	ToggleButton.TextSize = 14
+	Instance.new("UICorner", ToggleButton).CornerRadius = UDim.new(0, 6)
 
-	local open = true
+	local visible = true
 	ToggleButton.MouseButton1Click:Connect(function()
-		open = not open
-		MainFrame.Visible = open
+		visible = not visible
+		MainFrame.Visible = visible
+		ToggleButton.Text = visible and "Ẩn UI" or "Hiện UI"
 	end)
 
-	-----------------------------------------------------------------
-	-- TAB FARM + TOGGLE
-	local FarmTab, FarmButton = Tabs.Create(TabsHolder, "Farm Level")
+	-- ✅ Tạo Tab Farm
+	local FarmTab = Tabs.Create(TabContainer, "Farm")
 
-	local AutoFarmToggle = false
-	local ToggleFarmButton = Buttons.Create(FarmTab, "Auto Farm: OFF", function(btn)
-		AutoFarmToggle = not AutoFarmToggle
-		btn.Text = "Auto Farm: " .. (AutoFarmToggle and "ON" or "OFF")
-	end)
-
-	-- Bắt đầu AutoFarm khi bật toggle
-	task.spawn(function()
-		while task.wait(0.5) do
-			if AutoFarmToggle then
-				pcall(function()
-					AutoFarm(EnemyList)
-				end)
-			end
+	-- Thêm Toggle Auto Farm
+	local autoFarmEnabled = false
+	Buttons.Create(FarmTab, "Auto Farm: OFF", function(btn)
+		autoFarmEnabled = not autoFarmEnabled
+		btn.Text = autoFarmEnabled and "Auto Farm: ON" or "Auto Farm: OFF"
+		if autoFarmEnabled then
+			task.spawn(function()
+				AutoFarm(EnemyList)
+			end)
 		end
 	end)
 
-	-----------------------------------------------------------------
-	-- TAB SETTINGS (CÓ THỂ THÊM)
-	local SettingTab = Tabs.Create(TabsHolder, "Settings")
-	Buttons.Create(SettingTab, "Auto Stats: Melee", function()
-		pcall(function()
+	-- Thêm Auto Stats nếu muốn
+	Buttons.Create(FarmTab, "Auto Stats: Melee", function()
+		task.spawn(function()
 			AutoStats()
 		end)
 	end)
-
-	-- Mặc định hiển thị Farm Tab
-	FarmTab.Visible = true
 end
