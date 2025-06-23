@@ -1,70 +1,77 @@
 return function(Tabs, Buttons, Config, AutoFarm, EnemyList, AutoStats)
-	local TweenService = game:GetService("TweenService")
-	local UIS = game:GetService("UserInputService")
 	local Players = game:GetService("Players")
+	local PlayerGui = Players.LocalPlayer:WaitForChild("PlayerGui")
 
-	-- UI Container
-	local ScreenGui = Instance.new("ScreenGui", Players.LocalPlayer:WaitForChild("PlayerGui"))
+	-- ScreenGui chính
+	local ScreenGui = Instance.new("ScreenGui", PlayerGui)
 	ScreenGui.Name = "StackFlowUI"
 
 	-- Main Frame
 	local MainFrame = Instance.new("Frame", ScreenGui)
-	MainFrame.Size = UDim2.new(0, 500, 0, 300)
-	MainFrame.Position = UDim2.new(0.5, -250, 0.5, -150)
+	MainFrame.Size = UDim2.new(0, 500, 0, 350)
+	MainFrame.Position = UDim2.new(0.5, -250, 0.5, -175)
 	MainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 	MainFrame.BorderSizePixel = 0
 	Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0, 8)
 
 	-- Tabs Holder
-	local TabsFrame = Instance.new("Frame", MainFrame)
-	TabsFrame.Size = UDim2.new(0, 120, 1, 0)
-	TabsFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-	Instance.new("UICorner", TabsFrame).CornerRadius = UDim.new(0, 8)
+	local TabsHolder = Instance.new("Frame", MainFrame)
+	TabsHolder.Size = UDim2.new(0, 120, 1, 0)
+	TabsHolder.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+	TabsHolder.Position = UDim2.new(0, 0, 0, 0)
+	Instance.new("UICorner", TabsHolder).CornerRadius = UDim.new(0, 8)
 
-	local Layout = Instance.new("UIListLayout", TabsFrame)
-	Layout.Padding = UDim.new(0, 5)
-	Layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+	local TabsLayout = Instance.new("UIListLayout", TabsHolder)
+	TabsLayout.Padding = UDim.new(0, 5)
+	TabsLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 
-	-- Pages Frame
-	local PagesFrame = Instance.new("Frame", MainFrame)
-	PagesFrame.Size = UDim2.new(1, -130, 1, -10)
-	PagesFrame.Position = UDim2.new(0, 130, 0, 5)
-	PagesFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-	Instance.new("UICorner", PagesFrame).CornerRadius = UDim.new(0, 8)
+	-- Nút bật/tắt UI
+	local ToggleButton = Instance.new("TextButton", ScreenGui)
+	ToggleButton.Size = UDim2.new(0, 40, 0, 40)
+	ToggleButton.Position = UDim2.new(1, -50, 0, 20)
+	ToggleButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+	ToggleButton.Text = "🌚"
+	ToggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+	ToggleButton.Font = Enum.Font.GothamBold
+	ToggleButton.TextSize = 16
+	Instance.new("UICorner", ToggleButton).CornerRadius = UDim.new(0, 8)
 
-	-- Tạo Tab chính
-	local FarmTab = Tabs.Create(TabsFrame, "Farm Level")
-	FarmTab.Parent = PagesFrame
+	local open = true
+	ToggleButton.MouseButton1Click:Connect(function()
+		open = not open
+		MainFrame.Visible = open
+	end)
 
-	-- Nút bật/tắt Auto Farm
-	local isAutoFarm = false
-	Buttons.Create(FarmTab, "Auto Farm: false", function(btn)
-		isAutoFarm = not isAutoFarm
-		btn.Text = "Auto Farm: " .. tostring(isAutoFarm)
-		if isAutoFarm then
-			task.spawn(function()
-				AutoFarm(EnemyList)
-			end)
+	-----------------------------------------------------------------
+	-- TAB FARM + TOGGLE
+	local FarmTab, FarmButton = Tabs.Create(TabsHolder, "Farm Level")
+
+	local AutoFarmToggle = false
+	local ToggleFarmButton = Buttons.Create(FarmTab, "Auto Farm: OFF", function(btn)
+		AutoFarmToggle = not AutoFarmToggle
+		btn.Text = "Auto Farm: " .. (AutoFarmToggle and "ON" or "OFF")
+	end)
+
+	-- Bắt đầu AutoFarm khi bật toggle
+	task.spawn(function()
+		while task.wait(0.5) do
+			if AutoFarmToggle then
+				pcall(function()
+					AutoFarm(EnemyList)
+				end)
+			end
 		end
 	end)
 
-	-- Auto Stats (tăng chỉ số)
-	Buttons.Create(FarmTab, "Auto Stats", function()
-		task.spawn(AutoStats)
+	-----------------------------------------------------------------
+	-- TAB SETTINGS (CÓ THỂ THÊM)
+	local SettingTab = Tabs.Create(TabsHolder, "Settings")
+	Buttons.Create(SettingTab, "Auto Stats: Melee", function()
+		pcall(function()
+			AutoStats()
+		end)
 	end)
 
-	-- Toggle mở/ẩn UI
-	local ToggleBtn = Instance.new("TextButton", ScreenGui)
-	ToggleBtn.Size = UDim2.new(0, 40, 0, 40)
-	ToggleBtn.Position = UDim2.new(1, -50, 0, 20)
-	ToggleBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-	ToggleBtn.Text = "☰"
-	ToggleBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-	ToggleBtn.Font = Enum.Font.GothamBold
-	ToggleBtn.TextSize = 18
-	Instance.new("UICorner", ToggleBtn).CornerRadius = UDim.new(0, 8)
-
-	ToggleBtn.MouseButton1Click:Connect(function()
-		MainFrame.Visible = not MainFrame.Visible
-	end)
+	-- Mặc định hiển thị Farm Tab
+	FarmTab.Visible = true
 end
