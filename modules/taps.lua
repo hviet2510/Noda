@@ -1,19 +1,30 @@
 local Tabs = {}
 
 function Tabs.Create(parent, name)
-	local Tab = Instance.new("Frame")
-	Tab.Name = name
-	Tab.Size = UDim2.new(1, 0, 1, 0)
-	Tab.BackgroundTransparency = 1
-	Tab.Visible = false
-	Tab.Parent = parent
+	local TabButton = Instance.new("TextButton", parent)
+	TabButton.Size = UDim2.new(0, 100, 0, 30)
+	TabButton.Text = name
+	TabButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+	TabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+	TabButton.Font = Enum.Font.Gotham
+	TabButton.TextSize = 14
+	Instance.new("UICorner", TabButton).CornerRadius = UDim.new(0, 6)
 
-	local Layout = Instance.new("UIListLayout")
-	Layout.Parent = Tab
-	Layout.Padding = UDim.new(0, 8)
-	Layout.HorizontalAlignment = Enum.HorizontalAlignment.Left
+	local Page = Instance.new("Frame", parent)
+	Page.Size = UDim2.new(1, 0, 1, -40)
+	Page.Position = UDim2.new(0, 0, 0, 40)
+	Page.BackgroundTransparency = 1
+	Page.Visible = false
+	Instance.new("UIListLayout", Page).Padding = UDim.new(0, 6)
 
-	return Tab
+	TabButton.MouseButton1Click:Connect(function()
+		for _, v in pairs(parent:GetChildren()) do
+			if v:IsA("Frame") then v.Visible = false end
+		end
+		Page.Visible = true
+	end)
+
+	return Page
 end
 
 return Tabs
