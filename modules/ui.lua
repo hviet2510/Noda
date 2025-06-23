@@ -1,5 +1,5 @@
-local Tabs = loadstring(game:HttpGet("https://raw.githubusercontent.com/vieth2510/noda/main/modules/Tabs.lua"))()
-local Buttons = loadstring(game:HttpGet("https://raw.githubusercontent.com/vieth2510/noda/main/modules/Buttons.lua"))()
+local Tabs = loadstring(game:HttpGet("https://raw.githubusercontent.com/hviet2510/noda/main/modules/tabs.lua"))()
+local Buttons = loadstring(game:HttpGet("https://raw.githubusercontent.com/hviet2510/noda/main/modules/buttons.lua"))()
 
 local PlayerGui = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 local ScreenGui = Instance.new("ScreenGui", PlayerGui)
