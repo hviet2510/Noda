@@ -1,55 +1,28 @@
 return {
-	-- Starter Island
-	{Level = 1,   Mob = "Bandit", Quest = "BanditQuest1", CFrame = CFrame.new(1060, 16, 1547)},
-	
-	-- Jungle
-	{Level = 10,  Mob = "Monkey", Quest = "JungleQuest", CFrame = CFrame.new(-1613, 36, 144)},
-	{Level = 15,  Mob = "Gorilla", Quest = "JungleQuest", CFrame = CFrame.new(-1238, 6, -507)},
-	
-	-- Pirate Village
-	{Level = 20,  Mob = "Pirate", Quest = "BuggyQuest1", CFrame = CFrame.new(-1140, 4, 3820)},
-	{Level = 30,  Mob = "Brute", Quest = "BuggyQuest1", CFrame = CFrame.new(-1250, 4, 4300)},
-	
-	-- Desert
-	{Level = 40,  Mob = "Desert Bandit", Quest = "DesertQuest", CFrame = CFrame.new(932, 7, 4483)},
-	
-	-- Frozen Village
-	{Level = 60,  Mob = "Snow Bandit", Quest = "SnowQuest", CFrame = CFrame.new(1388, 87, -1297)},
-	
-	-- Marine Fortress
-	{Level = 75,  Mob = "Chief Petty Officer", Quest = "MarineQuest2", CFrame = CFrame.new(-4855, 20, 4328)},
-	
-	-- Skylands
-	{Level = 90,  Mob = "Sky Bandit", Quest = "SkyQuest", CFrame = CFrame.new(-4950, 317, -2625)},
-	{Level = 100, Mob = "Dark Master", Quest = "SkyQuest", CFrame = CFrame.new(-5250, 389, -2272)},
-	
-	-- Prison
-	{Level = 110, Mob = "Prisoner", Quest = "PrisonerQuest", CFrame = CFrame.new(5305, 0, 474)},
-	{Level = 190, Mob = "Warden", Quest = "ImpelQuest", CFrame = CFrame.new(5305, 0, 474)},
-	{Level = 210, Mob = "Chief Warden", Quest = "ImpelQuest", CFrame = CFrame.new(5205, 0, 475)},
-	
-	-- Magma Village
-	{Level = 130, Mob = "Magma Pirate", Quest = "MagmaQuest", CFrame = CFrame.new(-5266, 39, 8447)},
+	{Level = 1, Mob = "Bandit", Quest = "BanditQuest1", CFrame = CFrame.new(1060, 16, 1547)},
+	{Level = 10, Mob = "Monkey", Quest = "JungleQuest", CFrame = CFrame.new(-1613, 36, 144)},
+	{Level = 15, Mob = "Gorilla", Quest = "JungleQuest", CFrame = CFrame.new(-1238, 6, -507)},
+	{Level = 20, Mob = "Pirate", Quest = "BuggyQuest1", CFrame = CFrame.new(-1140, 4, 3820)},
+	{Level = 30, Mob = "Brute", Quest = "BuggyQuest1", CFrame = CFrame.new(-1250, 4, 4300)},
+	{Level = 40, Mob = "Desert Bandit", Quest = "DesertQuest", CFrame = CFrame.new(932, 7, 4483)},
+	{Level = 60, Mob = "Desert Officer", Quest = "DesertQuest", CFrame = CFrame.new(1572, 10, 4373)},
+	{Level = 75, Mob = "Snow Bandit", Quest = "SnowQuest", CFrame = CFrame.new(1388, 87, -1297)},
+	{Level = 90, Mob = "Snowman", Quest = "SnowQuest", CFrame = CFrame.new(1294, 89, -1411)},
+	{Level = 100, Mob = "Chief Petty Officer", Quest = "MarineQuest2", CFrame = CFrame.new(-4855, 20, 4328)},
+	{Level = 120, Mob = "Sky Bandit", Quest = "SkyQuest", CFrame = CFrame.new(-4950, 317, -2625)},
+	{Level = 140, Mob = "Dark Master", Quest = "SkyQuest", CFrame = CFrame.new(-5250, 389, -2272)},
+	{Level = 190, Mob = "Prisoner", Quest = "PrisonerQuest", CFrame = CFrame.new(5305, 0, 474)},
+	{Level = 210, Mob = "Dangerous Prisoner", Quest = "PrisonerQuest", CFrame = CFrame.new(5264, 0, 851)},
+	{Level = 225, Mob = "Toga Warrior", Quest = "ColosseumQuest", CFrame = CFrame.new(-1576, 8, -2988)},
+	{Level = 275, Mob = "Gladiator", Quest = "ColosseumQuest", CFrame = CFrame.new(-1263, 8, -3336)},
 	{Level = 300, Mob = "Military Soldier", Quest = "MagmaVillageQuest", CFrame = CFrame.new(-5407, 11, 8447)},
 	{Level = 325, Mob = "Military Spy", Quest = "MagmaVillageQuest", CFrame = CFrame.new(-5800, 84, 8820)},
-	
-	-- Underwater City
-	{Level = 150, Mob = "Fishman Warrior", Quest = "FishmanQuest", CFrame = CFrame.new(61122, 19, 1569)},
-	{Level = 175, Mob = "Fishman Commando", Quest = "FishmanQuest", CFrame = CFrame.new(61891, 19, 1638)},
 	{Level = 375, Mob = "Fishman Warrior", Quest = "FishmanQuest", CFrame = CFrame.new(61122, 19, 1569)},
 	{Level = 400, Mob = "Fishman Commando", Quest = "FishmanQuest", CFrame = CFrame.new(61891, 19, 1638)},
-	
-	-- Colosseum
-	{Level = 250, Mob = "Toga Warrior", Quest = "ColosseumQuest", CFrame = CFrame.new(-1576, 8, -2988)},
-	{Level = 275, Mob = "Gladiator", Quest = "ColosseumQuest", CFrame = CFrame.new(-1263, 8, -3336)},
-	
-	-- Sky Islands (Upper)
 	{Level = 450, Mob = "God's Guard", Quest = "SkyExp1Quest", CFrame = CFrame.new(-4600, 872, -1670)},
-	{Level = 500, Mob = "Shanda", Quest = "SkyExp2Quest", CFrame = CFrame.new(-7685, 5565, -502)},
+	{Level = 475, Mob = "Shanda", Quest = "SkyExp2Quest", CFrame = CFrame.new(-7685, 5565, -502)},
 	{Level = 525, Mob = "Royal Squad", Quest = "SkyExp2Quest", CFrame = CFrame.new(-7828, 5600, -1611)},
 	{Level = 550, Mob = "Royal Soldier", Quest = "SkyExp2Quest", CFrame = CFrame.new(-7875, 5645, -1158)},
-	
-	-- Fountain City
 	{Level = 625, Mob = "Galley Pirate", Quest = "FountainQuest", CFrame = CFrame.new(5586, 37, 3995)},
 	{Level = 650, Mob = "Galley Captain", Quest = "FountainQuest", CFrame = CFrame.new(5733, 42, 4772)},
 	{Level = 700, Mob = "Galley Captain", Quest = "FountainQuest", CFrame = CFrame.new(5733, 42, 4772)},
