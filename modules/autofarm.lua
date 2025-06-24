@@ -5,12 +5,19 @@ return function(EnemyList, Config)
 	local player = Players.LocalPlayer
 	local Combat = ReplicatedStorage.Remotes.Combat
 
-	local function GetHRP()
-		local character = player.Character or player.CharacterAdded:Wait()
-		return character:WaitForChild("HumanoidRootPart")
+	-- Auto Equip Melee
+	local function EquipMelee()
+		if Config.PreferMelee then
+			for _, tool in pairs(player.Backpack:GetChildren()) do
+				if tool:IsA("Tool") and tool.ToolTip == "Melee" then
+					player.Character.Humanoid:EquipTool(tool)
+					break
+				end
+			end
+		end
 	end
 
-	-- Hàm tìm quái theo Level
+	-- Tìm quái phù hợp Level
 	local function GetEnemy()
 		for i = #EnemyList, 1, -1 do
 			if player.Data.Level.Value >= EnemyList[i].Level then
@@ -26,9 +33,10 @@ return function(EnemyList, Config)
 		end)
 	end
 
-	-- Tween mượt đến vị trí quái
+	-- Tween đến vị trí quái
 	local function TweenToPosition(targetCFrame)
-		local HRP = GetHRP()
+		local character = player.Character or player.CharacterAdded:Wait()
+		local HRP = character:WaitForChild("HumanoidRootPart")
 		local tweenInfo = TweenInfo.new(1.2, Enum.EasingStyle.Linear)
 		local tweenGoal = {CFrame = targetCFrame}
 		local tween = TweenService:Create(HRP, tweenInfo, tweenGoal)
@@ -36,47 +44,42 @@ return function(EnemyList, Config)
 		tween.Completed:Wait()
 	end
 
-	-- Bring quái lại gần người chơi (ĐÃ FIX LỖI)
+	-- Bring quái lại gần
 	local function BringEnemies(enemyName)
-		if not Config.BringMob then return end
-		local HRP = GetHRP()
 		for _, mob in pairs(workspace.Enemies:GetChildren()) do
-			if mob:IsA("Model") and mob.Name == enemyName then
-				local humanoid = mob:FindFirstChildOfClass("Humanoid")
-				local root = mob:FindFirstChild("HumanoidRootPart")
-				if humanoid and root and humanoid.Health > 0 then
-					root.CFrame = HRP.CFrame * CFrame.new(0, -4, -5)
-					root.Anchored = true
+			if mob.Name == enemyName and mob:FindFirstChild("HumanoidRootPart") and mob:FindFirstChildOfClass("Humanoid") then
+				if mob.HumanoidRootPart and mob.HumanoidRootPart:IsA("BasePart") then
+					mob.HumanoidRootPart.CFrame = player.Character.HumanoidRootPart.CFrame * CFrame.new(0, -4, -5)
+					mob.HumanoidRootPart.Anchored = true
 				end
 			end
 		end
 	end
 
-	-- Auto Đấm Quái (ỔN ĐỊNH)
+	-- Đánh quái an toàn
 	local function AutoPunch(enemyName)
 		for _, mob in pairs(workspace.Enemies:GetChildren()) do
-			if mob:IsA("Model") and mob.Name == enemyName then
-				local humanoid = mob:FindFirstChildOfClass("Humanoid")
-				local root = mob:FindFirstChild("HumanoidRootPart")
-				if humanoid and root and humanoid.Health > 0 then
-					pcall(function()
-						Combat:FireServer(mob)
-					end)
-				end
+			if mob.Name == enemyName and mob:FindFirstChildOfClass("Humanoid") and mob.Humanoid.Health > 0 then
+				pcall(function()
+					Combat:FireServer(mob)
+				end)
 			end
 		end
 	end
 
-	-- Vòng lặp chính AutoFarm
+	-- Vòng lặp chính
 	while task.wait(0.2) do
-		local enemy = GetEnemy()
-		if enemy then
-			StartQuest(enemy)
-			TweenToPosition(enemy.CFrame + Vector3.new(0, 25, 0))
-			BringEnemies(enemy.Mob)
-			for _ = 1, 15 do
-				AutoPunch(enemy.Mob)
-				task.wait(Config.AttackDelay or 0.05)
+		if Config.AutoFarm then
+			local enemy = GetEnemy()
+			if enemy then
+				StartQuest(enemy)
+				EquipMelee()
+				TweenToPosition(enemy.CFrame + Vector3.new(0, 25, 0))
+				if Config.BringMob then BringEnemies(enemy.Mob) end
+				for _ = 1, 10 do
+					AutoPunch(enemy.Mob)
+					task.wait(Config.AttackDelay)
+				end
 			end
 		end
 	end
